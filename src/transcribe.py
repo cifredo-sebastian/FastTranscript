@@ -8,11 +8,9 @@ def transcribe_audio(wav_path):
     """
     recognizer = sr.Recognizer()
 
-    # Load the audio file
     with sr.AudioFile(wav_path) as source:
         audio = recognizer.record(source)
 
-    # Try to recognize the speech in the audio
     try:
         #print("Google Speech Recognition thinks you said " + recognizer.recognize_google(audio))
         text = recognizer.recognize_google(audio)
