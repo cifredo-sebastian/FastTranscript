@@ -36,5 +36,9 @@ def assemblyDiaritization(file_path):
     config=config
     )
 
+
+    lines = []
     for utterance in transcript.utterances:
-        print(f"Speaker {utterance.speaker}: {utterance.text}")
+        lines.append(f"Speaker {utterance.speaker}: {utterance.text}")
+
+    return '\n'.join(lines)

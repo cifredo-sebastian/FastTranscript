@@ -10,7 +10,7 @@ def main(input_m4a,output_txt):
 
     transcription = assemblyDiaritization("temp_audio.wav")
 
-    #save_transcription(transcription, output_txt)
+    save_transcription(transcription, output_txt)
 
 
 
