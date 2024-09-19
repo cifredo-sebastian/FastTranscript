@@ -15,6 +15,6 @@ def main(input_m4a,output_txt):
 
 
 if __name__ == "__main__":
-    input_m4a = "ME PERDI EN EL MAR CON MI VECINO!.m4a"
+    input_m4a = "R6 Veronica Rivera.m4a"
     output_txt = "transcription.txt"
     main (input_m4a,output_txt)
