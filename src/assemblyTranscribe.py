@@ -64,4 +64,4 @@ def assemblyDiaritization(file_path):
     for utterance in transcript.utterances:
         lines.append(f"Speaker {utterance.speaker}: {utterance.text}")
 
-    return '\n'.join(lines)
+    return '\n\n'.join(lines)
