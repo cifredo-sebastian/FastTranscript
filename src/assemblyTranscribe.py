@@ -6,9 +6,16 @@
 import time
 import threading
 import assemblyai as aai
+import json
+
+def load_config(file_path):
+    with open(file_path, 'r') as config_file:
+        return json.load(config_file)
+
+config = load_config('config.json')
 
 # Replace with your API key
-aai.settings.api_key = "a062defa71084271b5dbe8d7e639a106"
+aai.settings.api_key = config['api_key']
 
 # URL of the file to transcribe
 #FILE_URL = "https://github.com/AssemblyAI-Community/audio-examples/raw/main/20230607_me_canadian_wildfires.mp3"
@@ -22,6 +29,13 @@ def display_loading_message():
         print(".", end='', flush=True)
         time.sleep(1)
     print("\n")
+
+def ms_to_timestamp(ms):
+    """Convert milliseconds to a timestamp in minutes:seconds format."""
+    seconds = ms // 1000
+    minutes = seconds // 60
+    seconds = seconds % 60
+    return f"{minutes:02}:{seconds:02}"
 
 def assemblyTranscribe(file_path):
 
@@ -44,12 +58,15 @@ def assemblyDiaritization(file_path):
     
     start_time = time.time()
 
-    config = aai.TranscriptionConfig(speaker_labels=True, language_code="es")
+    speaker_labels = config['transcription']['speaker_labels']
+    language_code = config['transcription']['language_code']
+
+    transcription_config = aai.TranscriptionConfig(speaker_labels=speaker_labels, language_code=language_code)
 
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(
     file_path,
-    config=config
+    config=transcription_config
     )
 
     # Stop the loading message
@@ -62,6 +79,9 @@ def assemblyDiaritization(file_path):
 
     lines = []
     for utterance in transcript.utterances:
-        lines.append(f"Speaker {utterance.speaker}: {utterance.text}")
+        start_time = ms_to_timestamp(utterance.start)
+        end_time = ms_to_timestamp(utterance.end)
+        lines.append(f"[{start_time} - {end_time}] Speaker {utterance.speaker}: {utterance.text}")
+        #lines.append(f"Speaker {utterance.speaker}: {utterance.text}")
 
     return '\n\n'.join(lines)
