@@ -50,11 +50,11 @@ def assemblyTranscribe(file_path):
 
 def assemblyDiaritization(file_path):
     global loading
-    loading = True
+    #loading = True
 
     # Start the loading message in a separate thread
-    loading_thread = threading.Thread(target=display_loading_message)
-    loading_thread.start()
+    #loading_thread = threading.Thread(target=display_loading_message)
+    #loading_thread.start()
     
     start_time = time.time()
 
@@ -70,8 +70,8 @@ def assemblyDiaritization(file_path):
     )
 
     # Stop the loading message
-    loading = False
-    loading_thread.join()  # Wait for the loading thread to finish
+    #loading = False
+    #loading_thread.join()  # Wait for the loading thread to finish
 
     # Calculate elapsed time
     elapsed_time = time.time() - start_time

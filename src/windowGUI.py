@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 from src.mainlogic import main_process
+from src.windowUtils import update_status
 import os
 
 VALID_FILETYPES ={'m4a', 'mp4', 'wav', 'mp3'}
@@ -10,7 +11,10 @@ file_uploaded = False
 file_valid = False
 output_file_path = ""
 
-def process_file(file_path, filetype, config_params):
+# def update_status(status_label, message):
+#     status_label.config(text=message)
+
+def process_file(file_path, filetype, config_params, status_label):
     if file_uploaded:
         if file_valid:
             # print(f"Processing file: {file_path}")
@@ -18,8 +22,8 @@ def process_file(file_path, filetype, config_params):
             # print(f"Using config: {config_params}")
             output_file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])            
             if output_file_path:
-                print(f"Output will be saved to: {output_file_path}")
-                main_process(file_path,filetype,config_params,output_file_path)
+                #print(f"Output will be saved to: {output_file_path}")
+                main_process(file_path,filetype,config_params,output_file_path,status_label)
             else:
                 messagebox.showinfo("Save Transcription","Save operation was cancelled.")
         else:
@@ -76,7 +80,7 @@ def on_file_drop(event, file_path, status_label):
         file_valid = False
 
     # Update the status label with the current state
-    status_label.config(text=status)
+    update_status(status_label,status)
 
 
 def open_file_dialog(file_path, status_label):
@@ -99,14 +103,11 @@ def open_file_dialog(file_path, status_label):
             file_valid = False
 
         # Update the status label
-        status_label.config(text=status)
+        update_status(status_label,status)
 
 def create_window():
     root = TkinterDnD.Tk()
     root.title("Drag and Drop GUI")
-
-    # Status label to display the current state
-    
 
     file_path = tk.StringVar()
 
@@ -122,7 +123,7 @@ def create_window():
 
     tk.Button(root, text="Open File", command=lambda: open_file_dialog(file_path, status_label)).pack(pady=10)
 
-    tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), {"config": "example"})).pack(pady=10)
+    tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), {"config": "example"}, status_label)).pack(pady=10)
 
     tk.Button(root, text="Config", command=open_config).pack(pady=10)
 
