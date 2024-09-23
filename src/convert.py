@@ -1,14 +1,16 @@
 from pydub import AudioSegment
 
-def convert_m4a_to_wav(m4a_path, wav_path):
+def convert_to_wav(file_path, file_type, wav_path):
     """
-    Converts an M4A file to WAV format using pydub.
-    :param m4a_path: Path to input M4A file.
+    Converts a audio file to WAV format using pydub.
+    :param file_path: Path to input audio file.
+    :param file_type: Imported audio file type
     :param wav_path: Path to output WAV file.
     """
     try:
-        audio = AudioSegment.from_file(m4a_path, format="m4a")
+        print(f"Converting {file_path} from {file_type} to WAV")
+        audio = AudioSegment.from_file(file_path, format=file_type)
         audio.export(wav_path, format="wav")
-        print(f"Converted {m4a_path} to {wav_path}")
+        print(f"Converted {file_path} to {wav_path}")
     except Exception as e:
         print(f"Error during conversion: {e}")

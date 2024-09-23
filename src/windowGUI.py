@@ -1,19 +1,27 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES
+from src.mainlogic import main_process
 import os
 
 VALID_FILETYPES ={'m4a', 'mp4', 'wav', 'mp3'}
 
 file_uploaded = False
 file_valid = False
+output_file_path = ""
 
 def process_file(file_path, filetype, config_params):
     if file_uploaded:
         if file_valid:
-            print(f"Processing file: {file_path}")
-            print(f"Filetype: {filetype}")
-            print(f"Using config: {config_params}")
+            # print(f"Processing file: {file_path}")
+            # print(f"Filetype: {filetype}")
+            # print(f"Using config: {config_params}")
+            output_file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])            
+            if output_file_path:
+                print(f"Output will be saved to: {output_file_path}")
+                main_process(file_path,filetype,config_params,output_file_path)
+            else:
+                messagebox.showinfo("Save Transcription","Save operation was cancelled.")
         else:
             messagebox.showinfo("File Valid", "File not valid for processing")
     else:

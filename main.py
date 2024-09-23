@@ -1,5 +1,5 @@
 import os
-from src.convert import convert_m4a_to_wav
+from src.convert import convert_to_wav
 from src.transcribe import transcribe_audio
 from src.fileutils import save_transcription
 from src.windowGUI import create_window
@@ -7,7 +7,7 @@ from src.assemblyTranscribe import assemblyTranscribe, assemblyDiaritization
 
 def main(input_m4a,output_txt):
     #wav_file = "temp_audio.wav"
-    #convert_m4a_to_wav(input_m4a,wav_file)
+    #convert_to_wav(input_m4a,wav_file)
 
     #transcription = assemblyDiaritization("temp_audio.wav")
 
