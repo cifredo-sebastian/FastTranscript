@@ -4,6 +4,7 @@ from tkinterdnd2 import TkinterDnD, DND_FILES
 from src.mainlogic import main_process
 from src.windowUtils import update_status
 import os
+import threading
 
 VALID_FILETYPES ={'m4a', 'mp4', 'wav', 'mp3'}
 
@@ -23,7 +24,8 @@ def process_file(file_path, filetype, config_params, status_label):
             output_file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])            
             if output_file_path:
                 #print(f"Output will be saved to: {output_file_path}")
-                main_process(file_path,filetype,config_params,output_file_path,status_label)
+                thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, config_params, output_file_path, status_label))
+                thread.start()
             else:
                 messagebox.showinfo("Save Transcription","Save operation was cancelled.")
         else:
@@ -31,6 +33,11 @@ def process_file(file_path, filetype, config_params, status_label):
     else:
         messagebox.showinfo("File not uploaded", "File not uploaded for processing.")
     
+
+def process_in_thread(file_path, filetype, config_params, output_file_path, status_label):
+    #update_status(status_label, "Transcription started, please wait...")
+    main_process(file_path,filetype,config_params,output_file_path,status_label)
+    #update_status(status_label, "Transcription complete.")
 
 def open_config():
     config_window = tk.Toplevel()

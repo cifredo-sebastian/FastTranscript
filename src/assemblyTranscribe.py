@@ -23,12 +23,12 @@ aai.settings.api_key = config['api_key']
 # You can also transcribe a local file by passing in a file path
 # FILE_URL = './path/to/file.mp3'
 
-def display_loading_message():
-    print("Loading...", end='', flush=True)
-    while loading:
-        print(".", end='', flush=True)
-        time.sleep(1)
-    print("\n")
+# def display_loading_message():
+#     print("Loading...", end='', flush=True)
+#     while loading:
+#         print(".", end='', flush=True)
+#         time.sleep(1)
+#     print("\n")
 
 def ms_to_timestamp(ms):
     """Convert milliseconds to a timestamp in minutes:seconds format."""
@@ -55,6 +55,8 @@ def assemblyDiaritization(file_path):
     # Start the loading message in a separate thread
     #loading_thread = threading.Thread(target=display_loading_message)
     #loading_thread.start()
+
+    print('Loading...')
     
     start_time = time.time()
 
