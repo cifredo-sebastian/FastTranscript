@@ -8,7 +8,10 @@ import os
 import threading
 import json
 
-VALID_FILETYPES ={'m4a', 'mp4', 'wav', 'mp3'}
+VALID_FILETYPES = {'3ga', '8svx', 'aac', 'ac3', 'aif', 'aiff', 'alac', 'amr', 'ape', 'au', 'dss', 'flac', 'flv', 'm4a', 'm4b', 'm4p', 
+                   'm4r', 'mp3', 'mpga', 'ogg', 'oga', 'mogg', 'opus', 'qcp', 'tta', 'voc', 'wav', 'wma', 'wv', 'm2ts', 'mov', 'mp2', 'mp4', 'm4p', 'm4v', 'mxf', 'webm'}
+
+
 
 file_uploaded = False
 file_valid = False
@@ -91,7 +94,7 @@ def open_config():
 def get_extension(file_path):
     # Extract the file extension and strip unwanted characters
     _, file_extension = os.path.splitext(file_path)
-    return file_extension.strip('}').strip('.')
+    return file_extension.strip('}').strip('.').lower()
 
 def on_file_drop(event, file_path, status_label):
     global file_uploaded, file_valid
@@ -104,10 +107,12 @@ def on_file_drop(event, file_path, status_label):
 
     # Check if the file type is valid
     if (file_extension in VALID_FILETYPES):
-        status = f"{os.path.splitext(os.path.basename(event.data))[0]}, valid filetype"
+        #status = f"{os.path.splitext(os.path.basename(event.data))[0]}, valid filetype"
+        status = f"{os.path.splitext(os.path.basename(event.data))[0]}"
         file_valid = True
     else:
         status = f"{os.path.splitext(os.path.basename(event.data))[0]}, invalid filetype"
+        messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
         file_valid = False
 
     # Update the status label with the current state
@@ -127,10 +132,12 @@ def open_file_dialog(file_path, status_label):
 
         # Check if the file type is valid
         if file_extension in VALID_FILETYPES:
-            status = f"{os.path.basename(file)}, valid filetype"
+            #status = f"{os.path.basename(file)}, valid filetype"
+            status = f"{os.path.basename(file)}"
             file_valid = True
         else:
             status = f"{os.path.basename(file)}, invalid filetype"
+            messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
             file_valid = False
 
         # Update the status label
