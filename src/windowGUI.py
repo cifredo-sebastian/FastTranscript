@@ -3,8 +3,10 @@ from tkinter import filedialog, messagebox, ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 from src.mainlogic import main_process
 from src.windowUtils import update_status
+from src.config_manager import load_config, save_config
 import os
 import threading
+import json
 
 VALID_FILETYPES ={'m4a', 'mp4', 'wav', 'mp3'}
 
@@ -43,26 +45,48 @@ def open_config():
     config_window = tk.Toplevel()
     config_window.title("Configuration")
 
-    tk.Label(config_window, text="Option 1").pack(anchor="w")
-    check1 = tk.Checkbutton(config_window, text="Enable Feature X")
+    config = load_config()
+
+    #API Key
+    tk.Label(config_window, text="API Key").pack(anchor="w")
+    api_key_var = tk.StringVar(value=config["api_key"])
+    api_key_entry = tk.Entry(config_window, textvariable=api_key_var, show="*")
+    api_key_entry.pack(anchor="w")
+
+    # Checkbutton for speaker labels
+    tk.Label(config_window, text="Speaker Labels").pack(anchor="w")
+    speaker_labels_var = tk.BooleanVar(value=config["transcription"]["speaker_labels"])
+    check1 = tk.Checkbutton(config_window, text="Enable Speaker Labels", variable=speaker_labels_var)
     check1.pack(anchor="w")
 
     tk.Label(config_window, text="Choose Language").pack(anchor="w")
     language_var = tk.StringVar()
     dropdown = ttk.Combobox(config_window, textvariable=language_var)
     dropdown['values'] = ("English", "Spanish", "French")
-    dropdown.current(0)
+
+    language_codes = {
+        "English": "en",
+        "Spanish": "es",
+        "French": "fr"
+    }
+
+    # Set the dropdown to the current saved language code
+    current_language = [key for key, value in language_codes.items() if value == config["transcription"]["language_code"]][0]
+    language_var.set(current_language)
     dropdown.pack(anchor="w")
 
-    def save_config():
-        config = {
-            "enable_feature_x": check1.instate(['selected']),
-            "language": language_var.get()
+    def save_new_config():
+        new_config = {
+            "api_key": api_key_var.get(),
+            "transcription": {
+                "speaker_labels": speaker_labels_var.get(),
+                "language_code": language_codes[language_var.get()]
+            }
         }
-        print(f"Saved config: {config}")
+        save_config(new_config)
         config_window.destroy()
 
-    tk.Button(config_window, text="Save", command=save_config).pack()
+    tk.Button(config_window, text="Save", command=save_new_config).pack()
 
 def get_extension(file_path):
     # Extract the file extension and strip unwanted characters
