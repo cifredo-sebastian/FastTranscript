@@ -51,9 +51,13 @@ def process_in_thread(file_path, filetype,output_file_path, status_label, button
     toggle_buttons(buttons)
     #update_status(status_label, "Transcription complete.")
 
+def open_dropdown(event):
+    event.widget.event_generate('<Down>')
+
 def open_config():
     config_window = tk.Toplevel()
     config_window.title("Configuration")
+    config_window.minsize(300, 300)  # Set minimum window size (width, height)
 
     config = load_config()
 
@@ -69,22 +73,23 @@ def open_config():
     # }
 
     # API Key
-    tk.Label(config_window, text="API Key").pack(anchor="w")
+    tk.Label(config_window, text="API Key").pack(anchor="w", padx=10, pady=5)
     api_key_var = tk.StringVar(value=config["api_key"])
     api_key_entry = tk.Entry(config_window, textvariable=api_key_var, show="*")
-    api_key_entry.pack(anchor="w")
+    api_key_entry.pack(anchor="w", padx=10, pady=5)
 
     # Checkbutton for speaker labels
-    tk.Label(config_window, text="Speaker Labels").pack(anchor="w")
+    tk.Label(config_window, text="Speaker Labels").pack(anchor="w", padx=10, pady=5)
     speaker_labels_var = tk.BooleanVar(value=config["transcription"]["speaker_labels"])
     check1 = tk.Checkbutton(config_window, text="Enable Speaker Labels", variable=speaker_labels_var)
-    check1.pack(anchor="w")
+    check1.pack(anchor="w", padx=10, pady=5)
 
     # Language Dropdown   
-    tk.Label(config_window, text="Choose Language").pack(anchor="w")
+    tk.Label(config_window, text="Choose Language").pack(anchor="w", padx=10, pady=5)
     language_var = tk.StringVar()
-    dropdown = ttk.Combobox(config_window, textvariable=language_var)
+    dropdown = ttk.Combobox(config_window, textvariable=language_var, state="readonly")
     dropdown['values'] = ("English", "Spanish", "French")
+    dropdown.bind('<Button-1>', open_dropdown)
 
     language_codes = {
         "English": "en",
@@ -95,13 +100,14 @@ def open_config():
     # Set the dropdown to the current saved language code
     current_language = [key for key, value in language_codes.items() if value == config["transcription"]["language_code"]][0]
     language_var.set(current_language)
-    dropdown.pack(anchor="w")
+    dropdown.pack(anchor="w", padx=10, pady=5)
 
     # Timestamp Format Dropdown   
-    tk.Label(config_window, text="Timestamp Format").pack(anchor="w")
+    tk.Label(config_window, text="Timestamp Format").pack(anchor="w", padx=10, pady=5)
     timestamp_var = tk.StringVar()
-    dropdown = ttk.Combobox(config_window, textvariable=timestamp_var)
-    dropdown['values'] = ("None", "[Start]", "[Start-End]")
+    dropdown_ts = ttk.Combobox(config_window, textvariable=timestamp_var, state="readonly")
+    dropdown_ts['values'] = ("None", "[Start]", "[Start-End]")
+    dropdown_ts.bind('<Button-1>', open_dropdown)
 
     timestamp_codes = {
         "None": "",
@@ -112,8 +118,9 @@ def open_config():
     # Set the dropdown to the current saved format
     current_timestamp = [key for key, value in timestamp_codes.items() if value == config["transcription"]["timestamp_format"]][0]
     timestamp_var.set(current_timestamp)
-    dropdown.pack(anchor="w")
+    dropdown_ts.pack(anchor="w", padx=10, pady=5)
 
+    # Save button
     def save_new_config():
         new_config = {
             "api_key": api_key_var.get(),
@@ -126,7 +133,8 @@ def open_config():
         save_config(new_config)
         config_window.destroy()
 
-    tk.Button(config_window, text="Save", command=save_new_config).pack()
+    tk.Button(config_window, text="Save", command=save_new_config).pack(padx=10, pady=10)
+
 
 def clean_file_path(file_path):
     # Check if file_path starts and ends with curly braces
@@ -194,7 +202,7 @@ def toggle_buttons(buttons):
 
 def create_window():
     root = TkinterDnD.Tk()
-    root.title("Drag and Drop GUI")
+    root.title("Speaker Diarization")
 
     file_path = tk.StringVar()
 
