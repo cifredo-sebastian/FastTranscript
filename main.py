@@ -1,6 +1,6 @@
 import os
 from src.convert import convert_to_wav
-from src.transcribe import transcribe_audio
+from googleTranscribe import transcribe_audio
 from src.fileutils import save_transcription
 from src.windowGUI import create_window
 from src.assemblyTranscribe import assemblyTranscribe, assemblyDiaritization
