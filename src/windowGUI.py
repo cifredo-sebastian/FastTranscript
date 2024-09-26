@@ -15,12 +15,14 @@ VALID_FILETYPES = {'3ga', '8svx', 'aac', 'ac3', 'aif', 'aiff', 'alac', 'amr', 'a
 
 file_uploaded = False
 file_valid = False
+processing = False
 output_file_path = ""
 
 # def update_status(status_label, message):
 #     status_label.config(text=message)
 
-def process_file(file_path, filetype, status_label):
+def process_file(file_path, filetype, status_label, buttons):
+    global processing
     if file_uploaded:
         if file_valid:
             # print(f"Processing file: {file_path}")
@@ -29,7 +31,9 @@ def process_file(file_path, filetype, status_label):
             if output_file_path:
                 #print(f"Output will be saved to: {output_file_path}")
                 print(f"{file_path}")
-                thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label))
+                processing = True
+                toggle_buttons(buttons)
+                thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons))
                 thread.start()
             else:
                 messagebox.showinfo("Save Transcription","Save operation was cancelled.")
@@ -39,9 +43,12 @@ def process_file(file_path, filetype, status_label):
         messagebox.showinfo("File not uploaded", "File not uploaded for processing.")
     
 
-def process_in_thread(file_path, filetype,output_file_path, status_label):
+def process_in_thread(file_path, filetype,output_file_path, status_label, buttons):
+    global processing
     #update_status(status_label, "Transcription started, please wait...")
     main_process(file_path,filetype,output_file_path,status_label)
+    processing = False
+    toggle_buttons(buttons)
     #update_status(status_label, "Transcription complete.")
 
 def open_config():
@@ -180,6 +187,11 @@ def open_file_dialog(file_path, status_label):
         # Update the status label
         update_status(status_label,status)
 
+def toggle_buttons(buttons):
+    state = "disabled" if processing else "normal"
+    for button in buttons:
+        button.config(state=state)
+
 def create_window():
     root = TkinterDnD.Tk()
     root.title("Drag and Drop GUI")
@@ -196,10 +208,15 @@ def create_window():
     status_label = tk.Label(root, text="No file selected")
     status_label.pack(pady=10)
 
-    tk.Button(root, text="Open File", command=lambda: open_file_dialog(file_path, status_label)).pack(pady=10)
+    open_button = tk.Button(root, text="Open File", command=lambda: open_file_dialog(file_path, status_label))
+    open_button.pack(pady=10)
 
-    tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label)).pack(pady=10)
+    start_button = tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label, buttons))
+    start_button.pack(pady=10)
 
-    tk.Button(root, text="Config", command=open_config).pack(pady=10)
+    config_button = tk.Button(root, text="Config", command=open_config)
+    config_button.pack(pady=10)
+
+    buttons = [open_button, start_button, config_button]
 
     root.mainloop()

@@ -34,7 +34,11 @@ def ms_to_timestamp(ms):
     seconds = seconds % 60
     return f"{minutes:02}:{seconds:02}"
 
-def assemblyTranscribe(file_path):
+def assemblyTranscribe(file_path, config):
+    #config = load_config()
+
+    # Replace with your API key
+    aai.settings.api_key = config['api_key']
 
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(file_path)
@@ -45,13 +49,13 @@ def assemblyTranscribe(file_path):
         return(transcript.text)
 
 
-def assemblyDiaritization(file_path):
+def assemblyDiaritization(file_path, config):
     global loading
-    config = load_config()
+    #config = load_config()
 
     # Replace with your API key
     aai.settings.api_key = config['api_key']
-    
+
     #loading = True
 
     # Start the loading message in a separate thread

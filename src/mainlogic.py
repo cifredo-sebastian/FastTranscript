@@ -1,7 +1,8 @@
 from src.convert import convert_to_wav
-from src.assemblyTranscribe import assemblyDiaritization
+from src.assemblyTranscribe import assemblyDiaritization, assemblyTranscribe
 from src.fileutils import save_transcription
 from src.windowUtils import update_status
+from src.config_manager import load_config
 import os
 
 
@@ -18,9 +19,15 @@ def main_process(file_path, file_type, output_path,status_label):
     #     update_status(status_label,f"Converted {file_path}")
     # else:
     #     wav_file = file_path
+
+    config = load_config()
     
     update_status(status_label,f"Transcribing...")
-    transcription = assemblyDiaritization(file_path)
+    if config['transcription']['speaker_labels']:
+        transcription = assemblyDiaritization(file_path, config)
+    else:
+        transcription = assemblyTranscribe(file_path, config)
+    
     
     update_status(status_label, f"Saving transcription to {output_path}...")
     save_transcription(transcription, output_path)

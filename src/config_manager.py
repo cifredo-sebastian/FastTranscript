@@ -26,7 +26,6 @@ def get_config_path():
 
 def load_config():
     config_path = get_config_path()
-    # config_path = "config.json"
 
     # Default config settings
     config = {
