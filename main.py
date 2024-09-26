@@ -5,7 +5,7 @@ from src.fileutils import save_transcription
 from src.windowGUI import create_window
 from src.assemblyTranscribe import assemblyTranscribe, assemblyDiaritization
 
-def main(input_m4a, output_txt):
+def main():
     #wav_file = "temp_audio.wav"
     #convert_to_wav(input_m4a,wav_file)
 
@@ -20,5 +20,5 @@ def main(input_m4a, output_txt):
 if __name__ == "__main__":
     input_m4a = "Interrogatorio padre de Rey Oquendo.mp3"
     output_txt = "transcription.txt"
-    main (input_m4a,output_txt)
-    #main()
+    #main (input_m4a,output_txt)
+    main()
