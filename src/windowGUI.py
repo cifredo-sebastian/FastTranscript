@@ -206,18 +206,23 @@ def create_window():
 
     file_path = tk.StringVar()
 
-    drop_label = tk.Label(root, text="Drag a file here", relief="sunken", width=40, height=10)
-    drop_label.pack(pady=20)
+    drop_label = tk.Label(root, text="Drag or           a file here", relief="sunken", width=40, height=10)
+    drop_label.pack(padx=20, pady=20)
     drop_label.drop_target_register(DND_FILES)
     drop_label.dnd_bind('<<Drop>>', lambda event: on_file_drop(event, file_path, status_label))
 
     #tk.Label(root, textvariable=file_path).pack()
 
-    status_label = tk.Label(root, text="No file selected")
+    open_link = tk.Label(drop_label, text="open", fg="blue", cursor="hand2")
+    open_link.place(x=118, y=65)  # Adjust x, y to position it in the middle of the drop_label
+    open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label))
+
+    #status_label = tk.Label(root, text="No file selected")
+    status_label = tk.Message(root, text="No file selected", width=300, justify='center', anchor='center')
     status_label.pack(pady=10)
 
-    open_button = tk.Button(root, text="Open File", command=lambda: open_file_dialog(file_path, status_label))
-    open_button.pack(pady=10)
+    # open_button = tk.Button(root, text="Open File", command=lambda: open_file_dialog(file_path, status_label))
+    # open_button.pack(pady=10)
 
     start_button = tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label, buttons))
     start_button.pack(pady=10)
@@ -225,6 +230,6 @@ def create_window():
     config_button = tk.Button(root, text="Config", command=open_config)
     config_button.pack(pady=10)
 
-    buttons = [open_button, start_button, config_button]
+    buttons = [start_button, config_button]
 
     root.mainloop()
