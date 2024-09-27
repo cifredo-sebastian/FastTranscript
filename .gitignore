@@ -10,3 +10,6 @@ Directo Agte Gerena en supresion.MP3
 Interrogatorio padre de Rey Oquendo.txt
 Interrogatorio padre de Rey Oquendo.mp3
 config.json
+src/deprecated/convert.py
+src/deprecated/googleDiarization.py
+src/deprecated/googleTranscribe.py
