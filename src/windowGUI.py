@@ -23,20 +23,21 @@ output_file_path = ""
 
 def process_file(file_path, filetype, status_label, buttons):
     global processing
+    config = load_config()
     if file_uploaded:
         if file_valid:
-            # print(f"Processing file: {file_path}")
-            # print(f"Filetype: {filetype}")
-            output_file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])            
-            if output_file_path:
-                #print(f"Output will be saved to: {output_file_path}")
-                print(f"{file_path}")
-                processing = True
-                toggle_buttons(buttons)
-                thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons))
-                thread.start()
+            if config["api_key"]:
+                output_file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])            
+                if output_file_path:
+                    print(f"{file_path}")
+                    processing = True
+                    toggle_buttons(buttons)
+                    thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons))
+                    thread.start()
+                else:
+                    messagebox.showinfo("Save Transcription","Save operation was cancelled.")
             else:
-                messagebox.showinfo("Save Transcription","Save operation was cancelled.")
+                messagebox.showinfo("API Key","Missing API key for transcription.")
         else:
             messagebox.showinfo("File Valid", "File not valid for processing")
     else:

@@ -24,13 +24,15 @@ def main_process(file_path, file_type, output_path,status_label):
     
     update_status(status_label,f"Transcribing...")
     if config['transcription']['speaker_labels']:
-        transcription = assemblyDiaritization(file_path, config)
+        transcription, error = assemblyDiaritization(file_path, config)
     else:
-        transcription = assemblyTranscribe(file_path, config)
+        transcription, error = assemblyTranscribe(file_path, config)
     
-    
-    update_status(status_label, f"Saving transcription to {output_path}...")
-    save_transcription(transcription, output_path)
-    update_status(status_label, f"Transcription saved to {output_path}.")
+    if error:
+        update_status(status_label, f"Error found: {error}")
+    else:
+        update_status(status_label, f"Saving transcription to {output_path}...")
+        save_transcription(transcription, output_path)
+        update_status(status_label, f"Transcription saved to {output_path}.")
 
     

@@ -72,11 +72,14 @@ def assemblyDiaritization(file_path, config):
 
     transcription_config = aai.TranscriptionConfig(speaker_labels=speaker_labels, language_code=language_code)
 
-    transcriber = aai.Transcriber()
-    transcript = transcriber.transcribe(
-    file_path,
-    config=transcription_config
-    )
+    try:
+        transcriber = aai.Transcriber()
+        transcript = transcriber.transcribe(
+        file_path,
+        config=transcription_config
+        )
+    except Exception as e:
+        return None, str(e)
 
     # Stop the loading message
     #loading = False
