@@ -88,14 +88,34 @@ def open_config():
     tk.Label(config_window, text="Choose Language").pack(anchor="w", padx=10, pady=5)
     language_var = tk.StringVar()
     dropdown = ttk.Combobox(config_window, textvariable=language_var, state="readonly")
-    dropdown['values'] = ("English", "Spanish", "French")
+    dropdown['values'] = ("Global English", "Australian English", "British English", "US English", "Spanish", "French", "German", "Italian", "Portuguese", 
+                          "Dutch", "Hindi", "Japanese", "Chinese", "Finnish", "Korean", "Polish", "Russian", "Turkish", "Ukrainian", "Vietnamese")
+
     dropdown.bind('<Button-1>', open_dropdown)
 
     language_codes = {
-        "English": "en",
+        "Global English": "en",
+        "Australian English": "en_au",
+        "British English": "en_uk",
+        "US English": "en_us",
         "Spanish": "es",
-        "French": "fr"
+        "French": "fr",
+        "German": "de",
+        "Italian": "it",
+        "Portuguese": "pt",
+        "Dutch": "nl",
+        "Hindi": "hi",
+        "Japanese": "ja",
+        "Chinese": "zh",
+        "Finnish": "fi",
+        "Korean": "ko",
+        "Polish": "pl",
+        "Russian": "ru",
+        "Turkish": "tr",
+        "Ukrainian": "uk",
+        "Vietnamese": "vi"
     }
+
 
     # Set the dropdown to the current saved language code
     current_language = [key for key, value in language_codes.items() if value == config["transcription"]["language_code"]][0]
