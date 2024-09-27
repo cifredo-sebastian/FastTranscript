@@ -73,12 +73,15 @@ def assemblyDiaritization(file_path, config):
     transcription_config = aai.TranscriptionConfig(speaker_labels=speaker_labels, language_code=language_code)
 
     try:
+        print("Transcription started.")
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(
         file_path,
         config=transcription_config
         )
+        
     except Exception as e:
+        print("Found error")
         return None, str(e)
 
     # Stop the loading message
@@ -101,4 +104,4 @@ def assemblyDiaritization(file_path, config):
         lines.append(f"{timestamp} Speaker {utterance.speaker}: {utterance.text}")
         #lines.append(f"Speaker {utterance.speaker}: {utterance.text}")
 
-    return '\n\n'.join(lines)
+    return '\n\n'.join(lines), None

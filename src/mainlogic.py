@@ -1,4 +1,3 @@
-from deprecated.convert import convert_to_wav
 from src.assemblyTranscribe import assemblyDiaritization, assemblyTranscribe
 from src.fileutils import save_transcription
 from src.windowUtils import update_status
