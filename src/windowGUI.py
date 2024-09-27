@@ -296,6 +296,6 @@ def create_window():
 def update_config_display(config_label):
     config = load_config()
     if config['config-show']:
-        config_label.config(text=f"Speaker Labels: {config['transcription']['speaker_labels']} Language: {config['transcription']['language_code']}, Timestamp Format: {config['transcription']['timestamp_format']}, Filetype: {config['output-filetype']}")
+        config_label.config(text=f"Speaker Labels: {config['transcription']['speaker_labels']}, Language: {config['transcription']['language_code']}, Timestamp Format: {config['transcription']['timestamp_format']}, Filetype: {config['output-filetype']}")
     else:
         config_label.config(text=f"")
