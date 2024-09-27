@@ -5,3 +5,4 @@ def update_status(status_label, message):
     # if len(message) > max_length:
     #     message = message[:max_length] + '...'
     status_label.config(text=message)
+

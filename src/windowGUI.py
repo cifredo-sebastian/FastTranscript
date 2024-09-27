@@ -28,8 +28,8 @@ def process_file(file_path, filetype, status_label, buttons):
             config = load_config()
             if config["api_key"]:
                 output_file_path = filedialog.asksaveasfilename(
-                    defaultextension=".txt",
-                    filetypes=[("Text files", "*.txt"), ("Word Document", "*.docx"), ("All files", "*.*")]
+                    defaultextension=config.get("output-filetype", ".txt"),
+                    filetypes=[("All files", "*.*"), ("Text files", "*.txt"), ("Word Document", "*.docx")]
                 )
                 if output_file_path:
                     print(f"{file_path}")
@@ -58,7 +58,7 @@ def process_in_thread(file_path, filetype,output_file_path, status_label, button
 def open_dropdown(event):
     event.widget.event_generate('<Down>')
 
-def open_config():
+def open_config(config_label):
     config_window = tk.Toplevel()
     config_window.title("Configuration")
     config_window.minsize(300, 300)  # Set minimum window size (width, height)
@@ -144,6 +144,28 @@ def open_config():
     timestamp_var.set(current_timestamp)
     dropdown_ts.pack(anchor="w", padx=10, pady=5)
 
+    # Output Filetype Dropdown   
+    tk.Label(config_window, text="Default Output Filetype").pack(anchor="w", padx=10, pady=5)
+    filetype_var = tk.StringVar()
+    dropdown_ts = ttk.Combobox(config_window, textvariable=filetype_var, state="readonly")
+    dropdown_ts['values'] = (".txt", ".docx")
+    dropdown_ts.bind('<Button-1>', open_dropdown)
+
+    timestamp_codes = {
+        "None": "",
+        "[Start]": "start",
+        "[Start-End]": "start-end"
+    }
+
+    # Set the dropdown to the current saved filetype
+    filetype_var.set(config["output-filetype"])
+    dropdown_ts.pack(anchor="w", padx=10, pady=5)
+
+    # Checkbutton for config on main window
+    config_show_var = tk.BooleanVar(value=config["config-show"])
+    check1 = tk.Checkbutton(config_window, text="Display configuration settings on main window", variable=config_show_var)
+    check1.pack(anchor="w", padx=10, pady=5)
+
     # Save button
     def save_new_config():
         new_config = {
@@ -152,10 +174,14 @@ def open_config():
                 "speaker_labels": speaker_labels_var.get(),
                 "language_code": language_codes[language_var.get()],
                 "timestamp_format": timestamp_codes[timestamp_var.get()]
-            }
+            },
+            "output-filetype": filetype_var.get(),
+            "config-show": config_show_var.get()
         }
         save_config(new_config)
         config_window.destroy()
+        #Update the config label
+        update_config_display(config_label)
 
     tk.Button(config_window, text="Save", command=save_new_config).pack(padx=10, pady=10)
 
@@ -224,7 +250,10 @@ def toggle_buttons(buttons):
     for button in buttons:
         button.config(state=state)
 
+        
+
 def create_window():
+    config=load_config()
     root = TkinterDnD.Tk()
     root.title("Speaker Diarization")
 
@@ -235,25 +264,38 @@ def create_window():
     drop_label.drop_target_register(DND_FILES)
     drop_label.dnd_bind('<<Drop>>', lambda event: on_file_drop(event, file_path, status_label))
 
-    #tk.Label(root, textvariable=file_path).pack()
-
+    #Open Link
     open_link = tk.Label(drop_label, text="open", fg="blue", cursor="hand2")
     open_link.place(x=118, y=65)  # Adjust x, y to position it in the middle of the drop_label
     open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label))
 
-    #status_label = tk.Label(root, text="No file selected")
+    #Status Label text
     status_label = tk.Message(root, text="No file selected", width=300, justify='center', anchor='center')
     status_label.pack(pady=10)
 
-    # open_button = tk.Button(root, text="Open File", command=lambda: open_file_dialog(file_path, status_label))
-    # open_button.pack(pady=10)
-
+    #Start Button
     start_button = tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label, buttons))
     start_button.pack(pady=10)
 
-    config_button = tk.Button(root, text="Config", command=open_config)
+    #Config Button
+    config_label = None
+    config_button = tk.Button(root, text="Config", command=lambda: open_config(config_label))
     config_button.pack(pady=10)
+
+    #Config status text
+    #config_label = tk.Message(root, text=f"Speaker Labels: {config['transcription']['speaker_labels']} Language: {config['transcription']['language_code']}, Timestamp Format: {config['transcription']['timestamp_format']}, Filetype: {config['output-filetype']}", width=300, justify='center', anchor='center')
+    config_label = tk.Message(root, text="", width=300, justify='center', anchor='center')
+    update_config_display(config_label)
+    config_label.pack(pady=10)
 
     buttons = [start_button, config_button]
 
     root.mainloop()
+
+
+def update_config_display(config_label):
+    config = load_config()
+    if config['config-show']:
+        config_label.config(text=f"Speaker Labels: {config['transcription']['speaker_labels']} Language: {config['transcription']['language_code']}, Timestamp Format: {config['transcription']['timestamp_format']}, Filetype: {config['output-filetype']}")
+    else:
+        config_label.config(text=f"")
