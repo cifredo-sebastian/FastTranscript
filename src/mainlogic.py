@@ -21,7 +21,7 @@ def main_process(file_path, file_type, output_path,status_label):
 
     config = load_config()
     
-    update_status(status_label,f"Transcribing...")
+    update_status(status_label, "Transcribing, please wait...")
     if config['transcription']['speaker_labels']:
         transcription, error = assemblyDiaritization(file_path, config)
     else:

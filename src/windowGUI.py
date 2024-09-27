@@ -23,11 +23,14 @@ output_file_path = ""
 
 def process_file(file_path, filetype, status_label, buttons):
     global processing
-    config = load_config()
     if file_uploaded:
         if file_valid:
+            config = load_config()
             if config["api_key"]:
-                output_file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])            
+                output_file_path = filedialog.asksaveasfilename(
+                    defaultextension=".txt",
+                    filetypes=[("Text files", "*.txt"), ("Word Document", "*.docx"), ("All files", "*.*")]
+                )
                 if output_file_path:
                     print(f"{file_path}")
                     processing = True
@@ -45,12 +48,12 @@ def process_file(file_path, filetype, status_label, buttons):
     
 
 def process_in_thread(file_path, filetype,output_file_path, status_label, buttons):
-    global processing
-    #update_status(status_label, "Transcription started, please wait...")
+    global processing, file_uploaded, file_valid
     main_process(file_path,filetype,output_file_path,status_label)
     processing = False
+    file_uploaded = False
+    file_valid = False
     toggle_buttons(buttons)
-    #update_status(status_label, "Transcription complete.")
 
 def open_dropdown(event):
     event.widget.event_generate('<Down>')
