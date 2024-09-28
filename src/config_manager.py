@@ -7,11 +7,11 @@ CONFIG_FILE_NAME = 'config.json'
 def get_config_path():
     system = platform.system()
     if system == "Windows":
-        config_dir = os.path.join(os.getenv('LOCALAPPDATA'), "SpeakerDiarization") #################################### Tentative App Name ########################################################################
+        config_dir = os.path.join(os.getenv('LOCALAPPDATA'), "SoundScribe") #################################### Tentative App Name ########################################################################
     elif system == "Darwin":  # macOS
-        config_dir = os.path.join(os.path.expanduser('~'), "Library", "Application Support", "SpeakerDiarization")
+        config_dir = os.path.join(os.path.expanduser('~'), "Library", "Application Support", "SoundScribe")
     else:  # Linux or other Unix-like systems
-        config_dir = os.path.join(os.path.expanduser('~'), ".config", "SpeakerDiarization")
+        config_dir = os.path.join(os.path.expanduser('~'), ".config", "SoundScribe")
 
     # Create the directory if it doesn't exist
     os.makedirs(config_dir, exist_ok=True)

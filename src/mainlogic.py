@@ -32,6 +32,6 @@ def main_process(file_path, file_type, output_path,status_label):
     else:
         update_status(status_label, f"Saving transcription to {output_path}...")
         save_transcription(transcription, output_path)
-        update_status(status_label, f"Transcription saved to {output_path}.")
+        update_status(status_label, f"Transcription saved to {output_path}")
 
     

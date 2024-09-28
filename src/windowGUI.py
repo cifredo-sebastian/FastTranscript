@@ -60,7 +60,7 @@ def open_dropdown(event):
 
 def open_config(config_label):
     config_window = tk.Toplevel()
-    config_window.title("Configuration")
+    config_window.title("Settings")
     config_window.minsize(300, 300)  # Set minimum window size (width, height)
 
     config = load_config()
@@ -255,7 +255,7 @@ def toggle_buttons(buttons):
 def create_window():
     config=load_config()
     root = TkinterDnD.Tk()
-    root.title("Speaker Diarization")
+    root.title("SoundScribe")
 
     file_path = tk.StringVar()
 
@@ -279,7 +279,7 @@ def create_window():
 
     #Config Button
     config_label = None
-    config_button = tk.Button(root, text="Config", command=lambda: open_config(config_label))
+    config_button = tk.Button(root, text="Settings", command=lambda: open_config(config_label))
     config_button.pack(pady=10)
 
     #Config status text
