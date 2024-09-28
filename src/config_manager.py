@@ -19,10 +19,10 @@ def get_config_path():
     # Return the full path to config.json
     return os.path.join(config_dir, CONFIG_FILE_NAME)
 
-def get_config_path():
-    ############################################################################################ THIS IS TEMPORARY - DEV ###########################################################################################
-    # Save the config in the project directory for development
-    return CONFIG_FILE_NAME
+# def get_config_path():
+#     ############################################################################################ THIS IS TEMPORARY - DEV ###########################################################################################
+#     # Save the config in the project directory for development
+#     return CONFIG_FILE_NAME
 
 def load_config():
     config_path = get_config_path()
