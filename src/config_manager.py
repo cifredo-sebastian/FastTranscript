@@ -34,7 +34,9 @@ def load_config():
             "speaker_labels": False,
             "language_code": "en",
             "timestamp_format": "start-end"
-        }
+        },
+        "output-filetype": ".txt",
+        "config-show": False,
     }
 
     # Load the config if the file exists
