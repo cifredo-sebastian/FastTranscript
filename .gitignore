@@ -29,3 +29,4 @@ build/SoundScribe/localpycs/pyimod03_ctypes.pyc
 build/SoundScribe/localpycs/pyimod04_pywin32.pyc
 build/SoundScribe/localpycs/struct.pyc
 dist/SoundScribe.exe
+src\__pycache__
