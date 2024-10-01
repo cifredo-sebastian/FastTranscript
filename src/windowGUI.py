@@ -29,6 +29,7 @@ def process_file(file_path, filetype, status_label, buttons):
             if config["api_key"]:
                 output_file_path = filedialog.asksaveasfilename(
                     defaultextension=config.get("output-filetype", ".txt"),
+                    initialfile=os.path.splitext(os.path.basename(file_path))[0],
                     filetypes=[("All files", "*.*"), ("Text files", "*.txt"), ("Word Document", "*.docx")]
                 )
                 if output_file_path:
