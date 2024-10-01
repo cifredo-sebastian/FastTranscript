@@ -255,7 +255,7 @@ def toggle_buttons(buttons):
 def create_window():
     config=load_config()
     root = TkinterDnD.Tk()
-    root.title("SoundScribe")
+    root.title("Fast Transcript")
 
     file_path = tk.StringVar()
 
