@@ -85,6 +85,7 @@ def open_dropdown(event):
 def open_config(config_label):
     config_window = tk.Toplevel()
     config_window.title("Preferences")
+    config_window.iconbitmap("public\\fasttranscript.ico")
     config_window.minsize(300, 300)  # Set minimum window size (width, height)
 
     config = load_config()
@@ -292,6 +293,8 @@ def create_window():
     config_label.pack(pady=10)
 
     buttons = [start_button, config_button]
+
+    root.iconbitmap("public\\fasttranscript.ico")
 
     root.mainloop()
 
