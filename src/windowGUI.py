@@ -202,7 +202,7 @@ def get_extension(file_path):
     _, file_extension = os.path.splitext(file_path)
     return file_extension.strip('}').strip('.').lower()
 
-def on_file_drop(event, file_path, status_label):
+def on_file_drop(event, file_path, status_label,clear_link):
     global file_uploaded, file_valid
 
     file_path.set(clean_file_path(event.data))
@@ -216,16 +216,19 @@ def on_file_drop(event, file_path, status_label):
         #status = f"{os.path.splitext(os.path.basename(event.data))[0]}, valid filetype"
         status = f"{os.path.splitext(os.path.basename(event.data))[0]}"
         file_valid = True
+        clear_link.place(x=148, y=185)
     else:
         status = f"{os.path.splitext(os.path.basename(event.data))[0]}, invalid filetype"
         messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
         file_valid = False
+        clear_file(file_path,status_label,clear_link)
+        
 
     # Update the status label with the current state
     update_status(status_label,status)
 
 
-def open_file_dialog(file_path, status_label):
+def open_file_dialog(file_path, status_label,clear_link):
     global file_uploaded, file_valid
 
     file = filedialog.askopenfilename()
@@ -241,23 +244,19 @@ def open_file_dialog(file_path, status_label):
             #status = f"{os.path.basename(file)}, valid filetype"
             status = f"{os.path.basename(file)}"
             file_valid = True
+            clear_link.place(x=180, y=225)
         else:
             status = f"{os.path.basename(file)}, invalid filetype"
             messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
             file_valid = False
+            clear_file(file_path,status_label,clear_link)
 
         # Update the status label
         update_status(status_label,status)
 
-def toggle_buttons(buttons):
-    state = "disabled" if processing else "normal"
-    for button in buttons:
-        button.config(state=state)
 
-        
 
 def create_window():
-    config=load_config()
     root = TkinterDnD.Tk()
     root.title("FastTranscript")
 
@@ -266,28 +265,33 @@ def create_window():
     drop_label = tk.Label(root, text="Drag or           a file here", relief="sunken", width=40, height=10)
     drop_label.pack(padx=20, pady=20)
     drop_label.drop_target_register(DND_FILES)
-    drop_label.dnd_bind('<<Drop>>', lambda event: on_file_drop(event, file_path, status_label))
+    drop_label.dnd_bind('<<Drop>>', lambda event: on_file_drop(event, file_path, status_label, clear_link))
 
-    #Open Link
+    # Open Link
     open_link = tk.Label(drop_label, text="open", fg="blue", cursor="hand2")
-    open_link.place(x=118, y=65)  # Adjust x, y to position it in the middle of the drop_label
-    open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label))
+    open_link.place(x=118, y=65) 
+    open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label, clear_link))
 
-    #Status Label text
+    # Clear Link (initially hidden)
+    clear_link = tk.Label(root, text="clear", fg="blue", cursor="hand2")
+    clear_link.place(x=180, y=225)
+    clear_link.bind("<Button-1>", lambda event: clear_file(file_path, status_label, clear_link))
+    clear_link.place_forget()  # Hide initially
+
+    # Status Label text
     status_label = tk.Message(root, text="No file selected", width=300, justify='center', anchor='center')
     status_label.pack(pady=10)
 
-    #Start Button
+    # Start Button
     start_button = tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label, buttons))
     start_button.pack(pady=10)
 
-    #Config Button
+    # Config Button
     config_label = None
     config_button = tk.Button(root, text="Preferences", command=lambda: open_config(config_label))
     config_button.pack(pady=10)
 
-    #Config status text
-    #config_label = tk.Message(root, text=f"Speaker Labels: {config['transcription']['speaker_labels']} Language: {config['transcription']['language_code']}, Timestamp Format: {config['transcription']['timestamp_format']}, Filetype: {config['output-filetype']}", width=300, justify='center', anchor='center')
+    # Config status text
     config_label = tk.Message(root, text="", width=300, justify='center', anchor='center')
     update_config_display(config_label)
     config_label.pack(pady=10)
@@ -295,10 +299,20 @@ def create_window():
     buttons = [start_button, config_button]
 
     root.iconbitmap("public\\fasttranscript.ico")
-
     root.mainloop()
 
 
+
+def toggle_buttons(buttons):
+    state = "disabled" if processing else "normal"
+    for button in buttons:
+        button.config(state=state)
+
+
+def clear_file(file_path, status_label, clear_link):
+    file_path.set("")
+    status_label.config(text="No file selected")
+    clear_link.place_forget()  # Hide clear link
 
 
 def update_config_display(config_label):
