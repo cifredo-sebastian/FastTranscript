@@ -7,11 +7,11 @@ CONFIG_FILE_NAME = 'config.json'
 def get_config_path():
     system = platform.system()
     if system == "Windows":
-        config_dir = os.path.join(os.getenv('LOCALAPPDATA'), "Fast Transcript") #################################### Tentative App Name ########################################################################
+        config_dir = os.path.join(os.getenv('LOCALAPPDATA'), "FastTranscript") #################################### Tentative App Name ########################################################################
     elif system == "Darwin":  # macOS
-        config_dir = os.path.join(os.path.expanduser('~'), "Library", "Application Support", "Fast Transcript")
+        config_dir = os.path.join(os.path.expanduser('~'), "Library", "Application Support", "FastTranscript")
     else:  # Linux or other Unix-like systems
-        config_dir = os.path.join(os.path.expanduser('~'), ".config", "Fast Transcript")
+        config_dir = os.path.join(os.path.expanduser('~'), ".config", "FastTranscript")
 
     # Create the directory if it doesn't exist
     os.makedirs(config_dir, exist_ok=True)
