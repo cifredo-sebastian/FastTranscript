@@ -18,6 +18,29 @@ file_valid = False
 processing = False
 output_file_path = ""
 
+language_codes = {
+        "Global English": "en",
+        "Australian English": "en_au",
+        "British English": "en_uk",
+        "US English": "en_us",
+        "Spanish": "es",
+        "French": "fr",
+        "German": "de",
+        "Italian": "it",
+        "Portuguese": "pt",
+        "Dutch": "nl",
+        "Hindi": "hi",
+        "Japanese": "ja",
+        "Chinese": "zh",
+        "Finnish": "fi",
+        "Korean": "ko",
+        "Polish": "pl",
+        "Russian": "ru",
+        "Turkish": "tr",
+        "Ukrainian": "uk",
+        "Vietnamese": "vi"
+    }
+
 # def update_status(status_label, message):
 #     status_label.config(text=message)
 
@@ -98,28 +121,7 @@ def open_config(config_label):
 
     dropdown.bind('<Button-1>', open_dropdown)
 
-    language_codes = {
-        "Global English": "en",
-        "Australian English": "en_au",
-        "British English": "en_uk",
-        "US English": "en_us",
-        "Spanish": "es",
-        "French": "fr",
-        "German": "de",
-        "Italian": "it",
-        "Portuguese": "pt",
-        "Dutch": "nl",
-        "Hindi": "hi",
-        "Japanese": "ja",
-        "Chinese": "zh",
-        "Finnish": "fi",
-        "Korean": "ko",
-        "Polish": "pl",
-        "Russian": "ru",
-        "Turkish": "tr",
-        "Ukrainian": "uk",
-        "Vietnamese": "vi"
-    }
+
 
 
     # Set the dropdown to the current saved language code
@@ -294,17 +296,25 @@ def create_window():
     root.mainloop()
 
 
+
+
 def update_config_display(config_label):
+    reversed_language_codes = {v: k for k, v in language_codes.items()}
     config = load_config()
     if config['config-show']:
+        # Convert True/False to Enabled/Disabled
         speaker_status = "Enabled" if config['transcription']['speaker_labels'] else "Disabled"
+        
+        # Get the language name from the reversed_language_codes dictionary
+        language_name = reversed_language_codes.get(config['transcription']['language_code'], config['transcription']['language_code'])
+        
+        # Create the config text with newlines for display
         config_text = (
             f"Speaker Labels: {speaker_status}\n"
-            f"Language: {config['transcription']['language_code']}\n"
+            f"Language: {language_name}\n"
             f"Timestamp Format: {config['transcription']['timestamp_format']}\n"
             f"Filetype: {config['output-filetype']}"
         )
         config_label.config(text=config_text)
     else:
         config_label.config(text="")
-
