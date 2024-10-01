@@ -44,7 +44,7 @@ language_codes = {
 # def update_status(status_label, message):
 #     status_label.config(text=message)
 
-def process_file(file_path, filetype, status_label, buttons):
+def process_file(file_path, filetype, status_label, buttons, clear_link):
     global processing
     if file_uploaded:
         if file_valid:
@@ -59,7 +59,7 @@ def process_file(file_path, filetype, status_label, buttons):
                     print(f"{file_path}")
                     processing = True
                     toggle_buttons(buttons)
-                    thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons))
+                    thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons, clear_link))
                     thread.start()
                 else:
                     messagebox.showinfo("Save Transcription","Save operation was cancelled.")
@@ -71,12 +71,13 @@ def process_file(file_path, filetype, status_label, buttons):
         messagebox.showinfo("File not uploaded", "File not uploaded for processing.")
     
 
-def process_in_thread(file_path, filetype,output_file_path, status_label, buttons):
+def process_in_thread(file_path, filetype,output_file_path, status_label, buttons, clear_link):
     global processing, file_uploaded, file_valid
     main_process(file_path,filetype,output_file_path,status_label)
     processing = False
     file_uploaded = False
     file_valid = False
+    clear_link.place_forget()
     toggle_buttons(buttons)
 
 def open_dropdown(event):
@@ -206,22 +207,20 @@ def on_file_drop(event, file_path, status_label,clear_link):
     global file_uploaded, file_valid
 
     file_path.set(clean_file_path(event.data))
-    file_uploaded = True
 
     # Extract file extension
     file_extension = get_extension(event.data)
 
     # Check if the file type is valid
     if (file_extension in VALID_FILETYPES):
-        #status = f"{os.path.splitext(os.path.basename(event.data))[0]}, valid filetype"
         status = f"{os.path.splitext(os.path.basename(event.data))[0]}"
+        file_uploaded = True
         file_valid = True
         clear_link.place(x=148, y=185)
     else:
-        status = f"{os.path.splitext(os.path.basename(event.data))[0]}, invalid filetype"
-        messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
         file_valid = False
-        clear_file(file_path,status_label,clear_link)
+        clear_file(file_path,status_label)
+        messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
         
 
     # Update the status label with the current state
@@ -234,22 +233,20 @@ def open_file_dialog(file_path, status_label,clear_link):
     file = filedialog.askopenfilename()
     if file:
         file_path.set(clean_file_path(file))
-        file_uploaded = True
-
+        
         # Extract file extension
         file_extension = get_extension(file)
 
         # Check if the file type is valid
         if file_extension in VALID_FILETYPES:
-            #status = f"{os.path.basename(file)}, valid filetype"
             status = f"{os.path.basename(file)}"
+            file_uploaded = True
             file_valid = True
-            clear_link.place(x=180, y=225)
+            clear_link.place(x=148, y=185)
         else:
-            status = f"{os.path.basename(file)}, invalid filetype"
-            messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
             file_valid = False
-            clear_file(file_path,status_label,clear_link)
+            clear_file(file_path,status_label)
+            messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
 
         # Update the status label
         update_status(status_label,status)
@@ -275,7 +272,7 @@ def create_window():
     # Clear Link (initially hidden)
     clear_link = tk.Label(root, text="clear", fg="blue", cursor="hand2")
     clear_link.place(x=180, y=225)
-    clear_link.bind("<Button-1>", lambda event: clear_file(file_path, status_label, clear_link))
+    clear_link.bind("<Button-1>", lambda event: clear_file_and_link(file_path, status_label, clear_link))
     clear_link.place_forget()  # Hide initially
 
     # Status Label text
@@ -283,7 +280,7 @@ def create_window():
     status_label.pack(pady=10)
 
     # Start Button
-    start_button = tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label, buttons))
+    start_button = tk.Button(root, text="Start", command=lambda: process_file(file_path.get(), get_extension(file_path.get()), status_label, buttons, clear_link))
     start_button.pack(pady=10)
 
     # Config Button
@@ -309,10 +306,17 @@ def toggle_buttons(buttons):
         button.config(state=state)
 
 
-def clear_file(file_path, status_label, clear_link):
+def clear_file(file_path, status_label):
+    global file_uploaded, file_valid
     file_path.set("")
     status_label.config(text="No file selected")
+    file_uploaded = False
+    file_valid = False
+
+def clear_file_and_link(file_path, status_label, clear_link):
+    clear_file(file_path,status_label)
     clear_link.place_forget()  # Hide clear link
+
 
 
 def update_config_display(config_label):
