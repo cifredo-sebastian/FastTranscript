@@ -60,7 +60,7 @@ def open_dropdown(event):
 
 def open_config(config_label):
     config_window = tk.Toplevel()
-    config_window.title("Settings")
+    config_window.title("Preferences")
     config_window.minsize(300, 300)  # Set minimum window size (width, height)
 
     config = load_config()
@@ -279,7 +279,7 @@ def create_window():
 
     #Config Button
     config_label = None
-    config_button = tk.Button(root, text="Settings", command=lambda: open_config(config_label))
+    config_button = tk.Button(root, text="Preferences", command=lambda: open_config(config_label))
     config_button.pack(pady=10)
 
     #Config status text
@@ -296,6 +296,14 @@ def create_window():
 def update_config_display(config_label):
     config = load_config()
     if config['config-show']:
-        config_label.config(text=f"Speaker Labels: {config['transcription']['speaker_labels']}, Language: {config['transcription']['language_code']}, Timestamp Format: {config['transcription']['timestamp_format']}, Filetype: {config['output-filetype']}")
+        speaker_status = "Enabled" if config['transcription']['speaker_labels'] else "Disabled"
+        config_text = (
+            f"Speaker Labels: {speaker_status}\n"
+            f"Language: {config['transcription']['language_code']}\n"
+            f"Timestamp Format: {config['transcription']['timestamp_format']}\n"
+            f"Filetype: {config['output-filetype']}"
+        )
+        config_label.config(text=config_text)
     else:
-        config_label.config(text=f"")
+        config_label.config(text="")
+
