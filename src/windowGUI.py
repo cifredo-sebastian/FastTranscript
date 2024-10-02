@@ -9,7 +9,8 @@ import threading
 import json
 
 VALID_FILETYPES = {'3ga', '8svx', 'aac', 'ac3', 'aif', 'aiff', 'alac', 'amr', 'ape', 'au', 'dss', 'flac', 'flv', 'm4a', 'm4b', 'm4p', 
-                   'm4r', 'mp3', 'mpga', 'ogg', 'oga', 'mogg', 'opus', 'qcp', 'tta', 'voc', 'wav', 'wma', 'wv', 'm2ts', 'mov', 'mp2', 'mp4', 'm4p', 'm4v', 'mxf', 'webm'}
+                   'm4r', 'mp3', 'mpga', 'ogg', 'oga', 'mogg', 'opus', 'qcp', 'tta', 'voc', 'wav', 'wma', 'wv', 'm2ts', 'mov', 'mp2', 'mp4', 'm4p', 'm4v', 'mxf', 'webm',
+                   'txt','docx'}
 
 
 
@@ -49,7 +50,9 @@ def process_file(file_path, filetype, status_label, buttons, clear_link):
     if file_uploaded:
         if file_valid:
             config = load_config()
-            if config["api_key"]:
+            if filetype == 'txt':
+                speaker_relabel(file_path,filetype,status_label,clear_link)
+            elif config["api_key"]:
                 output_file_path = filedialog.asksaveasfilename(
                     defaultextension=config.get("output-filetype", ".txt"),
                     initialfile=os.path.splitext(os.path.basename(file_path))[0],
@@ -203,7 +206,7 @@ def get_extension(file_path):
     _, file_extension = os.path.splitext(file_path)
     return file_extension.strip('}').strip('.').lower()
 
-def on_file_drop(event, file_path, status_label,clear_link):
+def on_file_drop(event, file_path, status_label,clear_link, start_button):
     global file_uploaded, file_valid
 
     file_path.set(clean_file_path(event.data))
@@ -217,9 +220,13 @@ def on_file_drop(event, file_path, status_label,clear_link):
         file_uploaded = True
         file_valid = True
         clear_link.place(x=148, y=185)
+        if file_extension == 'txt':
+            start_button.config(text="Relabel")
+        else:
+            start_button.config(text="Start")
     else:
         file_valid = False
-        clear_file(file_path,status_label)
+        clear_file(file_path,status_label, start_button)
         messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
         
 
@@ -227,7 +234,7 @@ def on_file_drop(event, file_path, status_label,clear_link):
     update_status(status_label,status)
 
 
-def open_file_dialog(file_path, status_label,clear_link):
+def open_file_dialog(file_path, status_label,clear_link, start_button):
     global file_uploaded, file_valid
 
     file = filedialog.askopenfilename()
@@ -243,6 +250,10 @@ def open_file_dialog(file_path, status_label,clear_link):
             file_uploaded = True
             file_valid = True
             clear_link.place(x=148, y=185)
+            if file_extension == 'txt':
+                start_button.config(text="Relabel")
+            else:
+                start_button.config(text="Start")
         else:
             file_valid = False
             clear_file(file_path,status_label)
@@ -262,17 +273,17 @@ def create_window():
     drop_label = tk.Label(root, text="Drag or           a file here", relief="sunken", width=40, height=10)
     drop_label.pack(padx=20, pady=20)
     drop_label.drop_target_register(DND_FILES)
-    drop_label.dnd_bind('<<Drop>>', lambda event: on_file_drop(event, file_path, status_label, clear_link))
+    drop_label.dnd_bind('<<Drop>>', lambda event: on_file_drop(event, file_path, status_label, clear_link, start_button))
 
     # Open Link
     open_link = tk.Label(drop_label, text="open", fg="blue", cursor="hand2")
     open_link.place(x=118, y=65) 
-    open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label, clear_link))
+    open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label, clear_link, start_button))
 
     # Clear Link (initially hidden)
     clear_link = tk.Label(root, text="clear", fg="blue", cursor="hand2")
     clear_link.place(x=180, y=225)
-    clear_link.bind("<Button-1>", lambda event: clear_file_and_link(file_path, status_label, clear_link))
+    clear_link.bind("<Button-1>", lambda event: clear_file_and_link(file_path, status_label, clear_link, start_button))
     clear_link.place_forget()  # Hide initially
 
     # Status Label text
@@ -306,15 +317,16 @@ def toggle_buttons(buttons):
         button.config(state=state)
 
 
-def clear_file(file_path, status_label):
+def clear_file(file_path, status_label, start_button):
     global file_uploaded, file_valid
     file_path.set("")
     status_label.config(text="No file selected")
     file_uploaded = False
     file_valid = False
+    start_button.config(text="Start")
 
-def clear_file_and_link(file_path, status_label, clear_link):
-    clear_file(file_path,status_label)
+def clear_file_and_link(file_path, status_label, clear_link, start_button):
+    clear_file(file_path,status_label,start_button)
     clear_link.place_forget()  # Hide clear link
 
 
@@ -339,3 +351,6 @@ def update_config_display(config_label):
         config_label.config(text=config_text)
     else:
         config_label.config(text="")
+
+def speaker_relabel(file_path, file_extension, status_label, clear_link):
+    print("relabeling")
