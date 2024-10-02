@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox, ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 from src.mainlogic import main_process
 from src.windowUtils import update_status
+from src.relabel import relabel
 from src.config_manager import load_config, save_config
 import os
 import threading
@@ -51,7 +52,7 @@ def process_file(file_path, filetype, status_label, buttons, clear_link):
         if file_valid:
             config = load_config()
             if filetype == 'txt':
-                speaker_relabel(file_path,filetype,status_label,clear_link)
+                relabel(file_path,filetype,status_label)
             elif config["api_key"]:
                 output_file_path = filedialog.asksaveasfilename(
                     defaultextension=config.get("output-filetype", ".txt"),
