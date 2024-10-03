@@ -7,6 +7,7 @@ from src.relabel import relabel
 from src.config_manager import load_config, save_config
 import os
 import threading
+import sys
 import json
 
 VALID_FILETYPES = {'3ga', '8svx', 'aac', 'ac3', 'aif', 'aiff', 'alac', 'amr', 'ape', 'au', 'dss', 'flac', 'flv', 'm4a', 'm4b', 'm4p', 
@@ -96,7 +97,11 @@ def open_dropdown(event):
 def open_config(config_label):
     config_window = tk.Toplevel()
     config_window.title("Preferences")
-    config_window.iconbitmap("public\\fasttranscript.ico")
+    if hasattr(sys, '_MEIPASS'):
+        icon_path = os.path.join(sys._MEIPASS, 'public', 'fasttranscript.ico')
+    else:
+        icon_path = 'public/fasttranscript.ico'
+    config_window.iconbitmap(icon_path)
     config_window.minsize(300, 300)  # Set minimum window size (width, height)
 
     config = load_config()
@@ -319,7 +324,12 @@ def create_window():
 
     buttons = [start_button, config_button]
 
-    root.iconbitmap("public\\fasttranscript.ico")
+    if hasattr(sys, '_MEIPASS'):
+        icon_path = os.path.join(sys._MEIPASS, 'public', 'fasttranscript.ico')
+    else:
+        icon_path = 'public/fasttranscript.ico'
+
+    root.iconbitmap(icon_path)
     root.mainloop()
 
 

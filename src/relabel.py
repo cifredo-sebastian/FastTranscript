@@ -1,30 +1,36 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import docx
+import os
+import sys
 
 def relabel(file_path,filetype,status_label, file_destination):
     if file_destination:
         speaker_count, speaker_ids = count_speakers(file_path,filetype)
-        open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination)
+        if speaker_count == 0:
+            messagebox.showinfo("Labels not found", f"No speaker labels found in {file_path}.")
+        else:
+            open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination)
 
 def open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination):
     relabel_window = tk.Toplevel()
     relabel_window.title("Relabel")
-    relabel_window.iconbitmap("public\\fasttranscript.ico")
+    if hasattr(sys, '_MEIPASS'):
+        icon_path = os.path.join(sys._MEIPASS, 'public', 'fasttranscript.ico')
+    else:
+        icon_path = 'public/fasttranscript.ico'
+    relabel_window.iconbitmap(icon_path)
     relabel_window.minsize(300, 300)
 
     entries = {}
+    
+    for speaker in speaker_ids:
+        label = tk.Label(relabel_window, text=f'{speaker}: ')
+        label.pack(anchor='w')
+        entry = tk.Entry(relabel_window)
+        entry.pack(fill='x')
 
-    if speaker_count == 0:
-        messagebox.showinfo("Labels not found", f"No speaker labels found in {file_path}.")
-    else:
-        for speaker in speaker_ids:
-            label = tk.Label(relabel_window, text=f'{speaker}: ')
-            label.pack(anchor='w')
-            entry = tk.Entry(relabel_window)
-            entry.pack(fill='x')
-
-            entries[speaker] = entry
+        entries[speaker] = entry
 
     def save_data():
         speaker_data = {speaker: entries[speaker].get() for speaker in speaker_ids}
