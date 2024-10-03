@@ -51,8 +51,13 @@ def process_file(file_path, filetype, status_label, buttons, clear_link):
     if file_uploaded:
         if file_valid:
             config = load_config()
-            if filetype == 'txt':
-                relabel(file_path,filetype,status_label)
+            if filetype == 'txt' or filetype == 'docx':
+                output_file_path = filedialog.asksaveasfilename(
+                    defaultextension=f".{filetype}",
+                    initialfile=f"{os.path.splitext(os.path.basename(file_path))[0]}_relabel",
+                    filetypes=[("All files", "*.*"), ("Text files", "*.txt"), ("Word Document", "*.docx")]
+                )
+                relabel(file_path,filetype,status_label,output_file_path)
             elif config["api_key"]:
                 output_file_path = filedialog.asksaveasfilename(
                     defaultextension=config.get("output-filetype", ".txt"),
@@ -77,11 +82,11 @@ def process_file(file_path, filetype, status_label, buttons, clear_link):
 
 def process_in_thread(file_path, filetype,output_file_path, status_label, buttons, clear_link):
     global processing, file_uploaded, file_valid
+    clear_link.place_forget()
     main_process(file_path,filetype,output_file_path,status_label)
     processing = False
     file_uploaded = False
     file_valid = False
-    clear_link.place_forget()
     toggle_buttons(buttons)
 
 def open_dropdown(event):
@@ -221,7 +226,7 @@ def on_file_drop(event, file_path, status_label,clear_link, start_button):
         file_uploaded = True
         file_valid = True
         clear_link.place(x=148, y=185)
-        if file_extension == 'txt':
+        if file_extension == 'txt' or file_extension == 'docx':
             start_button.config(text="Relabel")
         else:
             start_button.config(text="Start")
@@ -251,7 +256,7 @@ def open_file_dialog(file_path, status_label,clear_link, start_button):
             file_uploaded = True
             file_valid = True
             clear_link.place(x=148, y=185)
-            if file_extension == 'txt':
+            if file_extension == 'txt' or file_extension == 'docx':
                 start_button.config(text="Relabel")
             else:
                 start_button.config(text="Start")
@@ -328,7 +333,7 @@ def clear_file(file_path, status_label, start_button):
 
 def clear_file_and_link(file_path, status_label, clear_link, start_button):
     clear_file(file_path,status_label,start_button)
-    clear_link.place_forget()  # Hide clear link
+    clear_link.place_forget()
 
 
 
