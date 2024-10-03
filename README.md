@@ -23,7 +23,6 @@ Welcome to FastTranscript! This program allows users to easily transcribe audio 
 
 1. **Launching the Application**:
 	- Open the application by running double clicking on `AppName.exe
-		![[Pasted image 20241003163949.png]]
 1. **Transcribing Audio**:
     - Drag and drop your audio file into the designated area of the program, or open it manually by clicking on `open`.
     - Click the “Start” button to begin transcription.
@@ -34,14 +33,11 @@ Welcome to FastTranscript! This program allows users to easily transcribe audio 
     - When transaction is complete, the program will let you know where the transcription has been saved. The transcription will include speaker labels and timestamps, formatted for easy readability, per your configuration.
 4. **Relabeling**:
 	- Optionally, you can drop or open a `.txt` or `.docx` file that FastTranscript produces to change the labels into custom ones of your choosing. The "Start" button will change into a "Relabel" button when you drop or open a `.txt` or `.docx` file. A "Relabel" window will appear when you press the button for you to manually input your desired labels. Note: Relabeling does not require an internet connection or an AssemblyAI API key.
-		![[Pasted image 20241003164820.png]]
-		![[Pasted image 20241003164417.png]]
 
 # Configuration
 
 1. **Accessing Configuration Settings**:
     - Click on the "Preferences" button to open the configuration window.
-    ![[Pasted image 20241003164435.png]]
 1. **Available Settings**:
     - **API Key**: Enter your API key for the speech-to-text service (displayed as a password field). This is REQUIRED for use with the AssemblyAI API. The program WILL NOT WORK without it.
     - **Speaker Labels**: Check the box to enable speaker labels (speech diarization) for transcription.
