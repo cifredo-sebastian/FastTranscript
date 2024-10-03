@@ -70,8 +70,6 @@ def process_file(file_path, filetype, status_label, buttons, clear_link):
                     toggle_buttons(buttons)
                     thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons, clear_link))
                     thread.start()
-                else:
-                    messagebox.showinfo("Save Transcription","Save operation was cancelled.")
             else:
                 messagebox.showinfo("API Key","Missing API key for transcription.")
         else:
@@ -296,7 +294,7 @@ def create_window():
     open_link.bind("<Button-1>", lambda event: open_file_dialog(file_path, status_label, clear_link, start_button))
 
     # Clear Link (initially hidden)
-    clear_link = tk.Label(root, text="clear", fg="blue", cursor="hand2")
+    clear_link = tk.Label(root, text="Clear", fg="blue", cursor="hand2")
     clear_link.place(x=180, y=225)
     clear_link.bind("<Button-1>", lambda event: clear_file_and_link(file_path, status_label, clear_link, start_button))
     clear_link.place_forget()  # Hide initially
@@ -366,6 +364,3 @@ def update_config_display(config_label):
         config_label.config(text=config_text)
     else:
         config_label.config(text="")
-
-def speaker_relabel(file_path, file_extension, status_label, clear_link):
-    print("relabeling")

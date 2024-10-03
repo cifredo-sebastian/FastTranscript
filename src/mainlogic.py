@@ -7,18 +7,6 @@ import os
 
 
 def main_process(file_path, file_type, output_path,status_label):
-    # Convert File
-
-    # update_status(status_label,f"Processing {file_path}")
-    # if file_path.startswith('{') and file_path.endswith('}'):
-    #     file_path = file_path[1:-1]
-    # if (file_type != 'wav'):
-    #     wav_file = "temp_audio.wav"
-    #     update_status(status_label,f"Converting {file_path} from {file_type} to WAV")
-    #     convert_to_wav(file_path,file_type,wav_file)
-    #     update_status(status_label,f"Converted {file_path}")
-    # else:
-    #     wav_file = file_path
 
     config = load_config()
     

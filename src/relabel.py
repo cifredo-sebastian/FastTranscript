@@ -3,8 +3,9 @@ from tkinter import filedialog, messagebox, ttk
 import docx
 
 def relabel(file_path,filetype,status_label, file_destination):
-    speaker_count, speaker_ids = count_speakers(file_path,filetype)
-    open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination)
+    if file_destination:
+        speaker_count, speaker_ids = count_speakers(file_path,filetype)
+        open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination)
 
 def open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination):
     relabel_window = tk.Toplevel()
