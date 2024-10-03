@@ -93,15 +93,18 @@ def assemblyDiaritization(file_path, config):
     print(f"Transcription completed in {elapsed_time:.2f} seconds.")
 
     lines = []
-    for utterance in transcript.utterances:
-        start_time = ms_to_timestamp(utterance.start)
-        end_time = ms_to_timestamp(utterance.end)
-        timestamp = (
-            f"[{start_time} - {end_time}]" if timestamp_format == "start-end" 
-            else f"[{start_time}]" if timestamp_format == "start" 
-            else f""
-        )
-        lines.append(f"{timestamp} Speaker {utterance.speaker}: {utterance.text}")
-        #lines.append(f"Speaker {utterance.speaker}: {utterance.text}")
+    try:
+        for utterance in transcript.utterances:
+            start_time = ms_to_timestamp(utterance.start)
+            end_time = ms_to_timestamp(utterance.end)
+            timestamp = (
+                f"[{start_time} - {end_time}]" if timestamp_format == "start-end" 
+                else f"[{start_time}]" if timestamp_format == "start" 
+                else f""
+            )
+            lines.append(f"{timestamp} Speaker {utterance.speaker}: {utterance.text}")
+    except Exception as e:
+        print("Error in transcription")
+        return None, str(e)
 
     return '\n\n'.join(lines), None

@@ -89,8 +89,8 @@ def process_in_thread(file_path, filetype,output_file_path, status_label, button
     file_valid = False
     toggle_buttons(buttons)
     config = load_config()
-    if config['alert']:
-        messagebox.showinfo("Transcription Complete", f"Transcription saved to {output_file_path}")
+    # if config['alert']:
+    #     messagebox.showinfo("Transcription Complete", f"Transcription saved to {output_file_path}")
 
 def open_dropdown(event):
     event.widget.event_generate('<Down>')
@@ -271,7 +271,7 @@ def open_file_dialog(file_path, status_label,clear_link, start_button):
                 start_button.config(text="Start")
         else:
             file_valid = False
-            clear_file(file_path,status_label)
+            clear_file(file_path,status_label, start_button)
             messagebox.showinfo("Invalid Filetype","Invalid filetype for transcription.")
 
         # Update the status label
