@@ -51,7 +51,7 @@ Welcome to FastTranscript! This program allows users to easily transcribe audio 
     - **Display configuration settings on main window**: Check the box to display your current saved settings under the `Settings` button on the main window. The format is as follows: `Speaker Labels, Language, Timestamp, Output type`.
     - **Alert message on completion of transcription**: Check the box to have FastTranscript alert you when the transcription process finishes.
 
-# DEV
+# Developer
 
 `pip install -r requirements.txt`
 
