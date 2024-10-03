@@ -88,6 +88,9 @@ def process_in_thread(file_path, filetype,output_file_path, status_label, button
     file_uploaded = False
     file_valid = False
     toggle_buttons(buttons)
+    config = load_config()
+    if config['alert']:
+        messagebox.showinfo("Transcription Complete", f"Transcription saved to {output_file_path}")
 
 def open_dropdown(event):
     event.widget.event_generate('<Down>')
@@ -180,6 +183,11 @@ def open_config(config_label):
     check1 = tk.Checkbutton(config_window, text="Display configuration settings on main window", variable=config_show_var)
     check1.pack(anchor="w", padx=10, pady=5)
 
+    # Checkbutton for alert on transcript complete
+    alert_var = tk.BooleanVar(value=config["alert"])
+    check2 = tk.Checkbutton(config_window, text="Alert message on completion of transcription", variable=alert_var)
+    check2.pack(anchor="w", padx=10, pady=5)
+
     # Save button
     def save_new_config():
         new_config = {
@@ -190,7 +198,8 @@ def open_config(config_label):
                 "timestamp_format": timestamp_codes[timestamp_var.get()]
             },
             "output-filetype": filetype_var.get(),
-            "config-show": config_show_var.get()
+            "config-show": config_show_var.get(),
+            "alert": alert_var.get()
         }
         save_config(new_config)
         config_window.destroy()

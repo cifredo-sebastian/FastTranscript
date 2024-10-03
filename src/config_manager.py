@@ -37,6 +37,7 @@ def load_config():
         },
         "output-filetype": ".txt",
         "config-show": False,
+        "alert": False,
     }
 
     # Load the config if the file exists
