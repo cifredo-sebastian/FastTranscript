@@ -37,11 +37,13 @@ Welcome to [FastTranscript](https://github.com/cifredo-sebastian/FastTranscript)
     - Drag and drop your audio file into the designated area of the program, or open it manually by clicking on `open`.
     - Click the “Start” button to begin transcription.
     - A "clear" link appears in the window that clears the file from the program.
-    - Note: An internet connection is REQUIRED to connect to AssemblyAI and transcribe audio.
+    - Note: An internet connection and an API key is REQUIRED to connect to AssemblyAI and transcribe audio.
 2. **Saving Transcriptions**:
     - Before transcription is started, you will be prompted to select a save location and filename for the output `.txt` or `.docx` file.
 3. **Viewing Results**:
-    - When transaction is complete, the program will let you know where the transcription has been saved. The transcription will include speaker labels and timestamps, formatted for easy readability, per your configuration.
+    - When the transcription is complete, the program will let you know where the transcription has been saved. 
+    - Note: The transcription may have errors in transcribing, grammar, labeling, etc. Do not assume it is a perfect result.
+    - The transcription will include speaker labels and timestamps, formatted for easy readability, per your configuration.
 4. **Relabeling**:
 	- Optionally, you can drop or open a `.txt` or `.docx` file that FastTranscript produces to change the labels into custom ones of your choosing. The "Start" button will change into a "Relabel" button when you drop or open a `.txt` or `.docx` file. A "Relabel" window will appear when you press the button for you to manually input your desired labels. 
 	- Note: Relabeling does not require an internet connection or an AssemblyAI API key.

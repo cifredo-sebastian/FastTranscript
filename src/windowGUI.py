@@ -5,6 +5,8 @@ from src.mainlogic import main_process
 from src.windowUtils import update_status
 from src.relabel import relabel
 from src.config_manager import load_config, save_config
+import tkinter.font as tkFont
+import webbrowser
 import os
 import threading
 import sys
@@ -72,7 +74,7 @@ def process_file(file_path, filetype, status_label, buttons, clear_link):
                     thread = threading.Thread(target=process_in_thread, args=(file_path, filetype, output_file_path, status_label, buttons, clear_link))
                     thread.start()
             else:
-                messagebox.showinfo("API Key","Missing API key for transcription.")
+                messagebox.showinfo("API Key","Missing API key for transcription. Go to Preferences to enter your AssemblyAI API key.")
         else:
             messagebox.showinfo("File Valid", "File not valid for processing")
     else:
@@ -125,7 +127,19 @@ def open_config(config_label):
 
     config = load_config()
 
-    tk.Label(config_window, text="API Key").pack(anchor="w", padx=10, pady=5)
+    label_frame = tk.Frame(config_window)
+    label_frame.pack(anchor="w", padx=10, pady=5)
+
+    #tk.Label(config_window, text="API Key").pack(anchor="w", padx=10, pady=5)
+
+    tk.Label(label_frame, text="API Key").pack(side="left", padx=(0, 5))
+
+    def open_api_key_website(event):
+        webbrowser.open("https://www.assemblyai.com/app")
+
+    link = tk.Label(label_frame, text="Get your API Key here", fg="blue", cursor="hand2", font=(tkFont.nametofont("TkDefaultFont"),9))
+    link.pack(side="left", padx=(0))
+    link.bind("<Button-1>", open_api_key_website)
 
     entry_frame = tk.Frame(config_window)
     entry_frame.pack(anchor="w", padx=10, pady=5)
@@ -140,12 +154,14 @@ def open_config(config_label):
 
     def toggle_api_key_visibility():
         if api_key_entry.cget('show') == '*':
-            api_key_entry.config(show='')  # Show the API key
+            api_key_entry.config(show='')
         else:
             api_key_entry.config(show='*')
 
     toggle_button = tk.Button(entry_frame, text="👁", command=toggle_api_key_visibility)
     toggle_button.pack(side="left")
+
+
 
     # Checkbutton for speaker labels
     tk.Label(config_window, text="Speaker Labels").pack(anchor="w", padx=10, pady=5)
