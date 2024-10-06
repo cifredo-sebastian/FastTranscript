@@ -94,6 +94,25 @@ def process_in_thread(file_path, filetype,output_file_path, status_label, button
 def open_dropdown(event):
     event.widget.event_generate('<Down>')
 
+def show_context_menu(event, entry):
+    # Create the context menu
+    context_menu = tk.Menu(entry, tearoff=0)
+    
+    # Add context menu commands
+    # context_menu.add_command(label="Undo", command=lambda: entry.event_generate("<<Undo>>"))
+    # context_menu.add_command(label="Redo", command=lambda: entry.event_generate("<<Redo>>"))
+    context_menu.add_command(label="Cut", command=lambda: entry.event_generate("<<Cut>>"))
+    context_menu.add_command(label="Copy", command=lambda: entry.event_generate("<<Copy>>"))
+    context_menu.add_command(label="Paste", command=lambda: entry.event_generate("<<Paste>>"))
+    context_menu.add_command(label="Delete", command=lambda: entry.delete(0, 'end'))
+    context_menu.add_separator()
+    context_menu.add_command(label="Select All", command=lambda: entry.select_range(0, 'end'))
+
+    
+    # Show the context menu at the mouse position
+    context_menu.tk_popup(event.x_root, event.y_root)
+
+
 def open_config(config_label):
     config_window = tk.Toplevel()
     config_window.title("Preferences")
@@ -106,22 +125,27 @@ def open_config(config_label):
 
     config = load_config()
 
-    # Service Dropdown
-    # tk.Label(config_window, text="Choose Transcriber").pack(anchor="w")
-    # service_var = tk.StringVar()
-    # dropdown = ttk.Combobox(config_window, textvariable=service_var)
-    # dropdown['values'] = ("Google", "AssemblyAI")
+    tk.Label(config_window, text="API Key").pack(anchor="w", padx=10, pady=5)
 
-    # service_codes = {
-    #     "Google Cloud Speech-to-Text": "google",
-    #     "AssemblyAI": "assemblyai"
-    # }
+    entry_frame = tk.Frame(config_window)
+    entry_frame.pack(anchor="w", padx=10, pady=5)
 
     # API Key
-    tk.Label(config_window, text="API Key").pack(anchor="w", padx=10, pady=5)
     api_key_var = tk.StringVar(value=config["api_key"])
-    api_key_entry = tk.Entry(config_window, textvariable=api_key_var, show="*")
-    api_key_entry.pack(anchor="w", padx=10, pady=5)
+    api_key_entry = tk.Entry(entry_frame, textvariable=api_key_var, show="*")
+    api_key_entry.pack(side="left", padx=(0, 5))
+
+    # api_key_entry.config(undo=True)
+    api_key_entry.bind("<Button-3>", lambda event: show_context_menu(event, api_key_entry))
+
+    def toggle_api_key_visibility():
+        if api_key_entry.cget('show') == '*':
+            api_key_entry.config(show='')  # Show the API key
+        else:
+            api_key_entry.config(show='*')
+
+    toggle_button = tk.Button(entry_frame, text="👁", command=toggle_api_key_visibility)
+    toggle_button.pack(side="left")
 
     # Checkbutton for speaker labels
     tk.Label(config_window, text="Speaker Labels").pack(anchor="w", padx=10, pady=5)
