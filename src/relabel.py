@@ -12,7 +12,7 @@ def relabel(file_path,filetype,status_label, file_destination):
         else:
             open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination)
 
-def open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, file_destination):
+def open_relabler(file_path, filetype, status_label, speaker_ids, speaker_count, file_destination):
     relabel_window = tk.Toplevel()
     relabel_window.title("Relabel")
     if hasattr(sys, '_MEIPASS'):
@@ -20,25 +20,51 @@ def open_relabler(file_path,filetype,status_label,speaker_ids, speaker_count, fi
     else:
         icon_path = 'public/fasttranscript.ico'
     relabel_window.iconbitmap(icon_path)
-    relabel_window.minsize(300, 300)
+
+    relabel_window.geometry("300x400")
+
+    container = ttk.Frame(relabel_window)
+    container.pack(fill='both', expand=True)
+
+    canvas = tk.Canvas(container, width=280)
+    canvas.pack(side='left', fill='both', expand=True)
+
+    scrollbar = ttk.Scrollbar(container, orient='vertical', command=canvas.yview)
+    scrollbar.pack(side='right', fill='y')
+
+    canvas.configure(yscrollcommand=scrollbar.set)
+    
+    canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+    scrollable_frame = ttk.Frame(canvas)
+    
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.itemconfig("window", width=canvas.winfo_width())
+    )
+    
+    canvas.create_window((0, 0), window=scrollable_frame, anchor='nw', tags="window")
 
     entries = {}
-    
+
+    # Add speaker labels and entry fields
     for speaker in speaker_ids:
-        label = tk.Label(relabel_window, text=f'{speaker}: ')
-        label.pack(anchor='w')
-        entry = tk.Entry(relabel_window)
-        entry.pack(fill='x')
+        label = tk.Label(scrollable_frame, text=f'{speaker}: ')
+        label.pack(anchor='w', padx=10, pady=5)
+        entry = tk.Entry(scrollable_frame)
+        entry.pack(fill='x', padx=10, pady=5)
 
         entries[speaker] = entry
 
     def save_data():
         speaker_data = {speaker: entries[speaker].get() for speaker in speaker_ids}
-        speaker_relabel(file_path, filetype, speaker_data,file_destination)
+        speaker_relabel(file_path, filetype, speaker_data, file_destination)
         messagebox.showinfo("Relabel Saved", f"File relabeled and saved in {file_destination}.")
         relabel_window.destroy()
 
-    tk.Button(relabel_window, text="Save", command=save_data).pack(padx=10, pady=10)
+    tk.Button(scrollable_frame, text="Save", command=save_data).pack(padx=10, pady=10)
+
+
 
 def speaker_relabel(file_path, filetype, speaker_data,file_destination):
     if filetype == 'docx':
