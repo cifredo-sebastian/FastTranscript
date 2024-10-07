@@ -231,6 +231,9 @@ def open_config(config_label):
     check2 = tk.Checkbutton(config_window, text="Alert message on completion of transcription", variable=alert_var)
     check2.pack(anchor="w", padx=10, pady=5)
 
+    button_frame = tk.Frame(config_window)
+    button_frame.pack(fill="x", padx=10, pady=10)
+
     # Save button
     def save_new_config():
         new_config = {
@@ -249,7 +252,17 @@ def open_config(config_label):
         #Update the config label
         update_config_display(config_label)
 
-    tk.Button(config_window, text="Save", command=save_new_config).pack(padx=10, pady=10)
+    #tk.Button(config_window, text="Save", command=save_new_config).pack(padx=10, pady=10)
+    save_button = tk.Button(button_frame, text="Save", command=save_new_config)
+    save_button.pack(anchor="center")
+
+    def open_github(event):
+        webbrowser.open("https://github.com/cifredo-sebastian")
+
+    # Developed by label with clickable GitHub link
+    github_link = tk.Label(config_window, text="Developed by Sebastian Cifredo", fg="blue", cursor="hand2", font=(tkFont.nametofont("TkDefaultFont"), 8), wraplength=100)
+    github_link.place(relx=1.0, rely=1.0, x=-10, y=-10, anchor="se")
+    github_link.bind("<Button-1>", open_github)
 
 
 def clean_file_path(file_path):
