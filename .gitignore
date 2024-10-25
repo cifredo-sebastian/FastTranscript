@@ -59,3 +59,6 @@ build/FastTranscript/localpycs/pyimod03_ctypes.pyc
 build/FastTranscript/localpycs/pyimod04_pywin32.pyc
 build/FastTranscript/localpycs/struct.pyc
 dist/FastTranscript.exe
+.venv/
+FastTranscript.exe
+main.dist/
